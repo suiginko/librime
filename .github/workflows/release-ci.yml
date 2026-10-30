@@ -9,21 +9,13 @@ on:
   workflow_dispatch:
 
 jobs:
-  linux:
-    uses: ./.github/workflows/linux-build.yml
-
-  macos:
-    uses: ./.github/workflows/macos-build.yml
-    with:
-      rime_plugins: hchunhui/librime-lua lotem/librime-octagram rime/librime-predict
-
   windows:
     uses: ./.github/workflows/windows-build.yml
     with:
       rime_plugins: hchunhui/librime-lua lotem/librime-octagram rime/librime-predict Carlson24/librime-ids-search
 
   release:
-    needs: [macos, windows]
+    needs: [windows]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout last commit
