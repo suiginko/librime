@@ -20,7 +20,7 @@ exit /b
 :install_plugin
 set plugin=%1
 if "%plugin%"=="Carlson24/librime-ids-reverse" set plugin=suiginko/librime-ids-reverse
-if "%plugin%"=="Carlson24/librime-ids-search" set plugin=suiginko/librime-ids-search
+if "%plugin%"=="Carlson24/librime-ids-search" set plugin=suiginko/librime-ids-reverse
 echo plugin: %plugin%
 for /f "delims=@" %%i in ("%plugin%") do (
   set slug=%%i
