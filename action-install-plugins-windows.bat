@@ -19,6 +19,7 @@ exit /b
 
 :install_plugin
 set plugin=%1
+set original_plugin=%plugin%
 if "%plugin%"=="Carlson24/librime-ids-reverse" set plugin=suiginko/librime-ids-reverse
 if "%plugin%"=="Carlson24/librime-ids-search" set plugin=suiginko/librime-ids-reverse
 echo plugin: %plugin%
@@ -32,10 +33,27 @@ if %slug% == %plugin% (
 ) else (
   set branch=%plugin:*@=%
 )
+set orig_slug=%original_plugin%
+for /f "delims=@" %%i in ("%original_plugin%") do (
+  set orig_slug=%%i
+  goto :got_orig_slug
+)
+:got_orig_slug
+set orig_project=%orig_slug:*/=%
+set orig_dir=plugins\%orig_project:librime-=%
+
 set plugin_project=%slug:*/=%
 set plugin_dir=plugins\%plugin_project:librime-=%
 git clone %clone_options% "https://github.com/%slug%.git" %plugin_dir%
 if errorlevel 1 exit /b
+
+if not "%orig_dir%"=="%plugin_dir%" (
+  if not exist "%orig_dir%" (
+    echo Linking or copying %plugin_dir% to %orig_dir%
+    xcopy /E /I /Q "%plugin_dir%" "%orig_dir%"
+  )
+)
+
 rem pull request ref doesn't work with git clone --branch
 if not [%branch%] == [] (
    git -C %plugin_dir% checkout %branch%
